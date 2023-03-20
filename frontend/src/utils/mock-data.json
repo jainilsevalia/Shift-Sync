@@ -1,0 +1,190 @@
+[{
+    "user_id": "6407a4213cbba755594aa614",
+    "name": "Jainil",
+    "startDate": "2020-05-18T14:10:30Z", 
+    "endDate": "2020-12-18T14:10:30Z",
+    "monday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"13:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "tuesday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "wednesday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "thursday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "friday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "saturday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "sunday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    }
+},{
+    "user_id": "6407a4213cbba755594aa615",
+    "name":"Shivam",
+    "startDate": "2020-05-18T14:10:30Z", 
+    "endDate": "2020-12-18T14:10:30Z",
+    "monday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "tuesday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "wednesday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "thursday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "friday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "saturday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"13:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "sunday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    }
+},{
+    "user_id": "6407a4213cbba755594aa613",
+    "name":"Jay",
+    "startDate": "2020-05-18T14:10:30Z", 
+    "endDate": "2020-12-18T14:10:30Z",
+    "monday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"13:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "tuesday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "wednesday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "thursday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "friday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "saturday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"13:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "sunday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    }
+},{
+    "user_id": "6407a4213cbba755594aa612",
+    "name":"Shvet",
+    "startDate": "2020-05-18T14:10:30Z", 
+    "endDate": "2020-12-18T14:10:30Z",
+    "monday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"13:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "tuesday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "wednesday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "thursday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "friday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "saturday": {
+        "startTime": "08:30",
+        "startTimeAbbreviations":"AM",
+        "endTime":"16:30",
+        "endTimeAbbreviations":"PM"
+    },
+    "sunday": {
+        "startTime": "10:00",
+        "startTimeAbbreviations":"AM",
+        "endTime":"15:30",
+        "endTimeAbbreviations":"PM"
+    }
+}
+]

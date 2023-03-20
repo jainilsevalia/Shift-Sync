@@ -1,0 +1,104 @@
+# Create New user
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "name":"Shivam Dube 2",
+    "email":"Sh499@gmail.com",
+    "PIN":"1000",
+    "Position":"Ui-Ux designer",
+    "role":[]
+}
+
+###
+
+# Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email":"sh499@gmail.com",
+    "PIN":"1000"
+}
+
+###
+
+# Getting all the users
+GET http://localhost:3000/user
+
+###
+
+# Get specific user 
+GET http://localhost:3000/user/64011dca27e2fd543c6e37c6
+
+
+###
+
+# update user
+PATCH http://localhost:3000/user/64011e0b27e2fd543c6e37c8
+Content-Type: application/json
+
+
+{
+    "name":"Shivam Dube"
+}
+
+###
+
+# Delete User
+DELETE http://localhost:3000/user/64079da565fe626e5cc27d67
+
+
+
+###
+
+POST http://localhost:3000/shift/addShift
+Content-Type: application/json
+
+{
+    "user_id": "6407a4213cbba755594aa615",
+    "startDate": "2020-05-18T14:10:30Z", 
+    "endDate": "2020-12-18T14:10:30Z",
+    "monday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    },
+    "tuesday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    },
+    "wednesday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    },
+    "thursday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    },
+    "friday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    },
+    "saturday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    },
+    "sunday": {
+        "startTime": 8,
+        "startTimeAbbreviations":"AM",
+        "endTime":5,
+        "endTimeAbbreviations":"PM"
+    }
+}

@@ -1,0 +1,9 @@
+.td-data {
+    background-color: rgb(205, 235, 253);
+    align-items: center;
+}
+
+.td-data:last-child {
+    display: flex;
+    justify-content: space-evenly;
+}

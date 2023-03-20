@@ -1,0 +1,46 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 1rem;
+}
+
+.table-main {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.th-header,td.data {
+    border: 1px solid #ffffff;
+    text-align: left;
+    padding: 8px;
+    font-size: 32px;
+}
+
+.th-header {
+    background-color: rgb(117, 201, 250);
+}
+
+.td-data {
+    background-color: rgb(205, 235, 253);
+    align-items: center;
+}
+
+.form-fillup {
+    display: flex;
+    gap: 5px;
+}
+
+.form-fillup .td-data:last-child {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.form-fillup * {
+    font-size: 14px;
+}
+
+.timeSlot{
+  display: flex;
+  flex-direction: column;
+}
