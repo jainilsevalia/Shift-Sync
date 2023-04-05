@@ -6,7 +6,7 @@ import Path from "../../constants/Path";
 import InputField from "../../components/InputField/InputField";
 import { useDispatch, useSelector } from "react-redux";
 import { updateLoginState } from "../../features/user/loginState.reducer";
-import { addUser } from "../../features/user/user.reducer";
+import { addUser, addUserDetails } from "../../features/user/user.reducer";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -36,6 +36,7 @@ const Login = () => {
         if (response.data.message === "Login successful") {
           dispatch(updateLoginState(true));
           dispatch(addUser(response.data.user));
+          dispatch(addUserDetails(response.data.user));
           navigate(Path.HOME);
           console.log(loginState);
           console.log(userDetails);

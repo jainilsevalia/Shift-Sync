@@ -8,7 +8,11 @@ import Home from "./pages/Home/Home";
 import { useDispatch, useSelector } from "react-redux";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import { axios } from "./utils/axios";
-import { addUser, deleteUser } from "./features/user/user.reducer";
+import {
+  addUser,
+  addUserDetails,
+  deleteUser,
+} from "./features/user/user.reducer";
 
 function App() {
   const dispatch = useDispatch();
@@ -18,7 +22,8 @@ function App() {
       if (userDetails?.length === 0) {
         axios.get("/user/").then((response) => {
           if (response.data.message !== "Invalid token") {
-            dispatch(addUser(response.data.user));
+            dispatch(addUser(response.data));
+            dispatch(addUserDetails(response.data));
           } else {
             dispatch(deleteUser());
           }

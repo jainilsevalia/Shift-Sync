@@ -139,6 +139,10 @@ const allocatedShift = new mongoose.Schema({
       required: true,
     },
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("allocatedShift", allocatedShift);

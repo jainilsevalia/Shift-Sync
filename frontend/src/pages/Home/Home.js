@@ -1,13 +1,18 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import "./Home.styles.css";
 import InputFiled from "../../components/InputField/InputField";
 import data from "../../utils/mock-data.json";
 import Button from "react-bootstrap/Button";
 import ReadOnlyRow from "../../components/ReadOnlyRow/ReadOnlyRow";
 import EditRow from "../../components/EditRow/EditRow";
+import { useSelector } from "react-redux";
+import { axios } from "../../utils/axios";
 
 const Home = () => {
+  const userDetail = useSelector((store) => store.user.userDetail);
   const [userShiftInfo, setUserShiftInfo] = useState(data);
+  const [allUserShiftInfo, setAllUserShiftInfo] = useState([]);
+  const [allUserList, setAllUserList] = useState([]);
   const [formValues, setFormValues] = useState({
     empName: "",
     monday: "",
@@ -24,6 +29,22 @@ const Home = () => {
     const value = e.target.value;
     setFormValues((values) => ({ ...values, [name]: value }));
   };
+
+  useEffect(() => {
+    axios
+      .get("/shift/getAllShift")
+      .then((response) => {
+        if (response.data.success) {
+          setAllUserShiftInfo(response.data.latestShifts);
+          setAllUserList(response.data.userList);
+        } else {
+          console.log("Inside else");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleSubmit = (e) => {
     console.log("INSIDE HANDLE SUBMIT");
@@ -274,13 +295,18 @@ const Home = () => {
                 <th className="th-header">Friday</th>
                 <th className="th-header">Saturday</th>
                 <th className="th-header">Sunday</th>
-                <th className="th-header">Action</th>
+                {userDetail?.role === "manager" ||
+                userDetail?.role === "owner" ? (
+                  <th className="th-header">Action</th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
-              {userShiftInfo.map((user) => (
+              {allUserShiftInfo.map((user) => (
                 <Fragment>
-                  {editableState === user.user_id ? (
+                  {editableState === user.user_id &&
+                  (userDetail?.role === "manager" ||
+                    userDetail?.role === "owner") ? (
                     <EditRow
                       editFormValues={editFormValues}
                       handleEditChange={handleEditChange}
@@ -299,184 +325,188 @@ const Home = () => {
           </table>
         </form>
       </div>
-      <div>
-        <span>Add new employee:</span>
-      </div>
-      <div>
-        <form className="form-fillup" onSubmit={handleSubmit}>
+      {userDetail?.role === "manager" || userDetail?.role === "owner" ? (
+        <>
           <div>
-            <InputFiled
-              name="empName"
-              type="text"
-              label="Employe Name"
-              id="empName"
-              value={formValues.empName}
-              handleChange={handleChange}
-            ></InputFiled>
-          </div>
-          <div className="timeSlot">
-            <div>
-              <InputFiled
-                name="mondayStart"
-                type="time"
-                label="Monday Start Time"
-                id="monday"
-                min="7:00"
-                max="20:30"
-                value={formValues.mondayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="mondayEnd"
-                type="time"
-                label="Monday End Time"
-                id="monday"
-                min="7:00"
-                max="20:30"
-                value={formValues.mondayEnd}
-                handleChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputFiled
-                name="tuesdayStart"
-                type="time"
-                label="Tuesday Start Time"
-                id="tuesday"
-                min="7:00"
-                max="20:30"
-                value={formValues.tuesdayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="tuesdayEnd"
-                type="time"
-                label="Tuesday End Time"
-                id="tuesday"
-                min="7:00"
-                max="20:30"
-                value={formValues.tuesdayEnd}
-                handleChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputFiled
-                name="wednesdayStart"
-                type="time"
-                label="Wednesday Start TIme"
-                id="wednesday"
-                min="7:00"
-                max="20:30"
-                value={formValues.wednesdayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="wednesdayEnd"
-                type="time"
-                label="Wednesday End Time"
-                id="wednesday"
-                min="7:00"
-                max="20:30"
-                value={formValues.wednesdayEnd}
-                handleChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputFiled
-                name="thursdayStart"
-                type="time"
-                label="Thursday Start Time"
-                id="thursday"
-                min="7:00"
-                max="20:30"
-                value={formValues.thursdayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="thursdayEnd"
-                type="time"
-                label="Thursday End Time"
-                id="thursday"
-                min="7:00"
-                max="20:30"
-                value={formValues.thursdayEnd}
-                handleChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputFiled
-                name="fridayStart"
-                type="time"
-                label="Friday Start Time"
-                id="friday"
-                min="7:00"
-                max="20:30"
-                value={formValues.fridayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="fridayEnd"
-                type="time"
-                label="Friday End Time"
-                id="friday"
-                min="7:00"
-                max="20:30"
-                value={formValues.fridayEnd}
-                handleChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputFiled
-                name="saturdayStart"
-                type="time"
-                label="Saturday Start Time"
-                id="saturday"
-                min="7:00"
-                max="20:30"
-                value={formValues.saturdayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="saturdayEnd"
-                type="time"
-                label="Saturday End Time"
-                id="saturday"
-                min="7:00"
-                max="20:30"
-                value={formValues.saturdayEnd}
-                handleChange={handleChange}
-              />
-            </div>
-            <div>
-              <InputFiled
-                name="sundayStart"
-                type="time"
-                label="Sunday Start Time"
-                id="sunday"
-                min="7:00"
-                max="20:30"
-                value={formValues.sundayStart}
-                handleChange={handleChange}
-              />
-              <InputFiled
-                name="sundayEnd"
-                type="time"
-                label="Sunday End Time"
-                id="sunday"
-                min="7:00"
-                max="20:30"
-                value={formValues.sundayEnd}
-                handleChange={handleChange}
-              />
-            </div>
+            <span>Add new employee:</span>
           </div>
           <div>
-            <Button varient="primary" type="submit">
-              Add +
-            </Button>
+            <form className="form-fillup" onSubmit={handleSubmit}>
+              <div>
+                <InputFiled
+                  name="empName"
+                  type="text"
+                  label="Employe Name"
+                  id="empName"
+                  value={formValues.empName}
+                  handleChange={handleChange}
+                ></InputFiled>
+              </div>
+              <div className="timeSlot">
+                <div>
+                  <InputFiled
+                    name="mondayStart"
+                    type="time"
+                    label="Monday Start Time"
+                    id="monday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.mondayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="mondayEnd"
+                    type="time"
+                    label="Monday End Time"
+                    id="monday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.mondayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <InputFiled
+                    name="tuesdayStart"
+                    type="time"
+                    label="Tuesday Start Time"
+                    id="tuesday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.tuesdayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="tuesdayEnd"
+                    type="time"
+                    label="Tuesday End Time"
+                    id="tuesday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.tuesdayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <InputFiled
+                    name="wednesdayStart"
+                    type="time"
+                    label="Wednesday Start TIme"
+                    id="wednesday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.wednesdayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="wednesdayEnd"
+                    type="time"
+                    label="Wednesday End Time"
+                    id="wednesday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.wednesdayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <InputFiled
+                    name="thursdayStart"
+                    type="time"
+                    label="Thursday Start Time"
+                    id="thursday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.thursdayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="thursdayEnd"
+                    type="time"
+                    label="Thursday End Time"
+                    id="thursday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.thursdayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <InputFiled
+                    name="fridayStart"
+                    type="time"
+                    label="Friday Start Time"
+                    id="friday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.fridayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="fridayEnd"
+                    type="time"
+                    label="Friday End Time"
+                    id="friday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.fridayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <InputFiled
+                    name="saturdayStart"
+                    type="time"
+                    label="Saturday Start Time"
+                    id="saturday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.saturdayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="saturdayEnd"
+                    type="time"
+                    label="Saturday End Time"
+                    id="saturday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.saturdayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <InputFiled
+                    name="sundayStart"
+                    type="time"
+                    label="Sunday Start Time"
+                    id="sunday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.sundayStart}
+                    handleChange={handleChange}
+                  />
+                  <InputFiled
+                    name="sundayEnd"
+                    type="time"
+                    label="Sunday End Time"
+                    id="sunday"
+                    min="7:00"
+                    max="20:30"
+                    value={formValues.sundayEnd}
+                    handleChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div>
+                <Button varient="primary" type="submit">
+                  Add +
+                </Button>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
+        </>
+      ) : null}
     </div>
   );
 };

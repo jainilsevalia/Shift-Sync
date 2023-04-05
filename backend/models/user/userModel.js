@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const roles = require("../../constants/roles");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,12 +21,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "role",
-    },
-  ],
+  role: {
+    type: String,
+    enum: [roles.MANAGER, roles.EMPLOYEE, roles.OWNER, roles.OTHERS],
+    default: roles.OTHERS,
+  },
 });
 
 module.exports = mongoose.model("user", userSchema);
