@@ -5,7 +5,7 @@ const Shift = require("../../models/AllocatedShift/allocatedShiftModel");
 const User = require("../../models/user/userModel");
 exports.addShift = async (req, res) => {
   const shift = new Shift({
-    user_id: req.user.user_id,
+    user_id: req.body.user_id,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
     monday: req.body.monday,
@@ -43,7 +43,7 @@ exports.getLatestShifts = async (req, res) => {
   try {
     const userList = await User.find({}).select("name email");
 
-    const latestShifts = await Shift.aggregate([
+    let latestShifts = await Shift.aggregate([
       {
         $sort: { endDate: -1 }, // Sort the shifts by endDate in descending order
       },
@@ -72,18 +72,44 @@ exports.getLatestShifts = async (req, res) => {
 
 exports.getShift = async (req, res) => {
   try {
-    shift = await Shift.find({
-      user_id: req.user.user_id,
-      startDate: "2021-06-20T14:10:30.000Z",
-      endDate: "2021-06-27T14:10:30.000Z",
-    });
+    const shift = await Shift.findById(req.params.id);
     res.status(200).json(shift);
   } catch (err) {
     res.status(400).json({ message: "something went wrong" });
   }
 };
 
-exports.updateShift = async (req, res) => {
+exports.deleteShift = async (req, res) => {
   try {
-  } catch (err) {}
+    shift = await Shift.deleteMany({ user_id: req.params.id });
+    res
+      .status(200)
+      .json({ success: true, message: "Shift Deleted successfully" });
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
+exports.updateShift = async (req, res) => {
+  const updatedShift = {
+    monday: req.body.monday,
+    tuesday: req.body.tuesday,
+    wednesday: req.body.wednesday,
+    thursday: req.body.thursday,
+    friday: req.body.friday,
+    saturday: req.body.saturday,
+    sunday: req.body.sunday,
+  };
+  console.log(req.params.id);
+  try {
+    const shift = await Shift.findByIdAndUpdate(req.params.id, updatedShift);
+    shift.save();
+    res.status(200).json({
+      success: true,
+      message: "Shift updated successfully!! :)",
+      shift,
+    });
+  } catch (err) {
+    res.status(500).json({ message: false, message: "Something Went Wrong!!" });
+  }
 };

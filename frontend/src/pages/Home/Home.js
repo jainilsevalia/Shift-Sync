@@ -11,10 +11,15 @@ import { axios } from "../../utils/axios";
 const Home = () => {
   const userDetail = useSelector((store) => store.user.userDetail);
   const [userShiftInfo, setUserShiftInfo] = useState(data);
+
   const [allUserShiftInfo, setAllUserShiftInfo] = useState([]);
   const [allUserList, setAllUserList] = useState([]);
+  const [isEdited, setIsEdited] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOptionKey, setSelectedOptionKey] = useState("");
+  const [isShiftDeleted, setIsShiftDeleted] = useState(false);
   const [formValues, setFormValues] = useState({
-    empName: "",
+    empName: selectedOption,
     monday: "",
     tuesday: "",
     wednesday: "",
@@ -30,6 +35,16 @@ const Home = () => {
     setFormValues((values) => ({ ...values, [name]: value }));
   };
 
+  const handleDropdownChange = (e) => {
+    const options = JSON.parse(e.target.value);
+    setSelectedOption(options.value);
+    setSelectedOptionKey(options.id);
+    console.log(options.value);
+    console.log(options.id);
+    console.log(e.target.value);
+    setFormValues((values) => ({ ...values, empName: options.value }));
+  };
+
   useEffect(() => {
     axios
       .get("/shift/getAllShift")
@@ -37,6 +52,8 @@ const Home = () => {
         if (response.data.success) {
           setAllUserShiftInfo(response.data.latestShifts);
           setAllUserList(response.data.userList);
+          setIsShiftDeleted(false);
+          setIsEdited(false);
         } else {
           console.log("Inside else");
         }
@@ -44,15 +61,16 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [isShiftDeleted, isEdited]);
 
   const handleSubmit = (e) => {
     console.log("INSIDE HANDLE SUBMIT");
+    console.log(selectedOptionKey);
     e.preventDefault();
     const newUserShiftInfo = {
-      user_id: "6407a4213cbba755594aa615",
-      startDate: "2020-05-18T14:10:30Z",
-      endDate: "2020-12-18T14:10:30Z",
+      user_id: selectedOptionKey,
+      startDate: "2023-05-05T14:10:30Z",
+      endDate: "2023-05-11T14:10:30Z",
       name: formValues.empName,
       monday: {
         startTime: formValues.mondayStart,
@@ -98,8 +116,17 @@ const Home = () => {
       },
     };
 
-    const newUserShiftInfoList = [...userShiftInfo, newUserShiftInfo];
-    setUserShiftInfo(newUserShiftInfoList);
+    console.log(formValues);
+    console.log(selectedOption);
+
+    axios
+      .post("/shift/addShift", newUserShiftInfo)
+      .then((response) => {
+        const addedShift = response.data;
+        const newUserShiftInfoList = [...allUserShiftInfo, addedShift];
+        setAllUserShiftInfo(newUserShiftInfoList);
+      })
+      .catch((error) => console.log(error));
   };
 
   const [editableState, setEditableState] = useState(null);
@@ -116,6 +143,7 @@ const Home = () => {
 
   const handleEditChange = (e) => {
     e.preventDefault();
+
     const name = e.target.name;
     console.log(name);
     const parent = name.split("-")[0];
@@ -145,64 +173,73 @@ const Home = () => {
     console.log(editFormValues);
     event.preventDefault();
 
-    const editUserInfo = {
-      user_id: editFormValues.user_id,
-      startDate: "2020-05-18T14:10:30Z",
-      endDate: "2020-12-18T14:10:30Z",
-      name: editFormValues.name,
-      monday: {
-        startTime: editFormValues.monday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.monday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      tuesday: {
-        startTime: editFormValues.tuesday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.tuesday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      wednesday: {
-        startTime: editFormValues.wednesday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.wednesday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      thursday: {
-        startTime: editFormValues.thursday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.thursday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      friday: {
-        startTime: editFormValues.friday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.friday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      saturday: {
-        startTime: editFormValues.saturday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.saturday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      sunday: {
-        startTime: editFormValues.sunday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: editFormValues.saturday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-    };
+    axios
+      .put(`/shift/updateShift/${editFormValues._id}`, editFormValues)
+      .then((response) => {
+        setIsEdited(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    const newUserShiftInfoList = [...userShiftInfo];
+    // const editUserInfo = {
+    //   user_id: editFormValues.user_id,
+    //   startDate: "2020-05-18T14:10:30Z",
+    //   endDate: "2020-12-18T14:10:30Z",
+    //   name: editFormValues.name,
+    //   monday: {
+    //     startTime: editFormValues.monday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.monday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   tuesday: {
+    //     startTime: editFormValues.tuesday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.tuesday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   wednesday: {
+    //     startTime: editFormValues.wednesday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.wednesday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   thursday: {
+    //     startTime: editFormValues.thursday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.thursday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   friday: {
+    //     startTime: editFormValues.friday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.friday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   saturday: {
+    //     startTime: editFormValues.saturday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.saturday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   sunday: {
+    //     startTime: editFormValues.sunday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: editFormValues.saturday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    // };
 
-    const index = userShiftInfo.findIndex(
-      (user) => user.user_id === editFormValues.user_id
-    );
+    // const newUserShiftInfoList = [...userShiftInfo];
 
-    newUserShiftInfoList[index] = editUserInfo;
+    // const index = userShiftInfo.findIndex(
+    //   (user) => user.user_id === editFormValues.user_id
+    // );
 
-    setUserShiftInfo(newUserShiftInfoList);
+    // newUserShiftInfoList[index] = editUserInfo;
+
+    // setUserShiftInfo(newUserShiftInfoList);
     setEditableState(null);
   };
 
@@ -210,59 +247,68 @@ const Home = () => {
     e.preventDefault();
     console.log("----------------------------------");
     console.log(user);
-    setEditableState(user.user_id);
+    setEditableState(user._id);
 
-    const EditFormValues = {
-      user_id: user.user_id,
-      startDate: "2020-05-18T14:10:30Z",
-      endDate: "2020-12-18T14:10:30Z",
-      name: user.name,
-      monday: {
-        startTime: user.monday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.monday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      tuesday: {
-        startTime: user.tuesday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.tuesday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      wednesday: {
-        startTime: user.wednesday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.wednesday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      thursday: {
-        startTime: user.thursday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.thursday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      friday: {
-        startTime: user.friday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.friday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      saturday: {
-        startTime: user.saturday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.saturday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-      sunday: {
-        startTime: user.sunday.startTime,
-        startTimeAbbreviations: "AM",
-        endTime: user.saturday.endTime,
-        endTimeAbbreviations: "PM",
-      },
-    };
+    axios
+      .get(`/shift/getShift/${user._id}`)
+      .then((respone) => {
+        setEditFormValues(respone.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    setEditFormValues(EditFormValues);
-    console.log(EditFormValues);
+    // const EditFormValues = {
+    //   user_id: user.user_id,
+    //   startDate: "2020-05-18T14:10:30Z",
+    //   endDate: "2020-12-18T14:10:30Z",
+    //   name: user.name,
+    //   monday: {
+    //     startTime: user.monday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.monday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   tuesday: {
+    //     startTime: user.tuesday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.tuesday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   wednesday: {
+    //     startTime: user.wednesday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.wednesday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   thursday: {
+    //     startTime: user.thursday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.thursday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   friday: {
+    //     startTime: user.friday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.friday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   saturday: {
+    //     startTime: user.saturday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.saturday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    //   sunday: {
+    //     startTime: user.sunday.startTime,
+    //     startTimeAbbreviations: "AM",
+    //     endTime: user.saturday.endTime,
+    //     endTimeAbbreviations: "PM",
+    //   },
+    // };
+
+    // setEditFormValues(EditFormValues);
+    // console.log(EditFormValues);
   };
 
   const handleCancle = () => {
@@ -270,14 +316,36 @@ const Home = () => {
   };
 
   const handleDelete = (deleteUserId) => {
-    const newUserInfo = [...userShiftInfo];
-    const index = userShiftInfo.findIndex(
-      (user) => user.user_id === deleteUserId
-    );
+    axios
+      .delete(`/shift/deleteShift/${deleteUserId}`)
+      .then((respone) => {
+        setIsShiftDeleted(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    newUserInfo.splice(index, 1);
-    setUserShiftInfo(newUserInfo);
+    // const newUserInfo = [...userShiftInfo];
+    // const index = userShiftInfo.findIndex(
+    //   (user) => user.user_id === deleteUserId
+    // );
+
+    // newUserInfo.splice(index, 1);
+    // setUserShiftInfo(newUserInfo);
   };
+
+  const options = allUserList
+    .filter(
+      (user) => !allUserShiftInfo.some((shift) => shift.user_id === user._id)
+    )
+    .map((item) => (
+      <option
+        key={item.id}
+        value={`{"id":"${item._id}", "value":"${item.name}"}`}
+      >
+        {item.name}
+      </option>
+    ));
 
   return (
     <div className="app-container">
@@ -304,7 +372,7 @@ const Home = () => {
             <tbody>
               {allUserShiftInfo.map((user) => (
                 <Fragment>
-                  {editableState === user.user_id &&
+                  {editableState === user._id &&
                   (userDetail?.role === "manager" ||
                     userDetail?.role === "owner") ? (
                     <EditRow
@@ -314,6 +382,13 @@ const Home = () => {
                     />
                   ) : (
                     <ReadOnlyRow
+                      userName={allUserList.map((userName) => {
+                        if (user.user_id === userName._id) {
+                          return userName.name;
+                        } else {
+                          return null;
+                        }
+                      })}
                       user={user}
                       handleEditClick={handleEditClick}
                       handleDelete={handleDelete}
@@ -333,14 +408,24 @@ const Home = () => {
           <div>
             <form className="form-fillup" onSubmit={handleSubmit}>
               <div>
-                <InputFiled
+                {/* <InputFiled
                   name="empName"
                   type="text"
                   label="Employe Name"
                   id="empName"
                   value={formValues.empName}
                   handleChange={handleChange}
-                ></InputFiled>
+                ></InputFiled> */}
+                <select
+                  key={selectedOptionKey}
+                  value={selectedOption}
+                  // onChange={(e) => setSelectedOption(e.target.value)}
+                  onChange={handleDropdownChange}
+                  // onChange={(e) => formValues.empName(e.target.value)}
+                >
+                  {options}
+                </select>
+                <p>Selected option: {selectedOption}</p>
               </div>
               <div className="timeSlot">
                 <div>

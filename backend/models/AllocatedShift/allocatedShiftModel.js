@@ -7,7 +7,7 @@ const allocatedShift = new mongoose.Schema({
   },
   startDate: {
     type: Date,
-    required: true,
+    // required: true,
   },
   endDate: {
     type: Date,
@@ -15,128 +15,128 @@ const allocatedShift = new mongoose.Schema({
   },
   monday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   tuesday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   wednesday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   thursday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   friday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   saturday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   sunday: {
     startTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     startTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
     endTime: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true,
     },
     endTimeAbbreviations: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   createdAt: {

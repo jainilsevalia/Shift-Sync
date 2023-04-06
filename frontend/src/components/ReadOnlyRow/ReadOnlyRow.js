@@ -1,10 +1,10 @@
 import React from "react";
 import IconComponent from "../Icon/Icon";
 import "./ReadOnlyRow.styles.css";
-const ReadOnlyRow = ({ user, handleEditClick, handleDelete }) => {
+const ReadOnlyRow = ({ user, handleEditClick, handleDelete, userName }) => {
   return (
     <tr>
-      <td className="td-data">{user.name}</td>
+      <td className="td-data">{userName}</td>
       <td className="td-data">
         {user.monday.startTime}
         {user.monday.startTimeAbbreviations} - {user.monday.endTime}
