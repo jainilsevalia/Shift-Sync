@@ -1,10 +1,21 @@
 import React from "react";
 import IconComponent from "../Icon/Icon";
 import "./ReadOnlyRow.styles.css";
-const ReadOnlyRow = ({ user, handleEditClick, handleDelete, userName }) => {
+const ReadOnlyRow = ({
+  user,
+  handleEditClick,
+  handleDelete,
+  userName,
+  profilePic,
+}) => {
+  const image = profilePic;
+  console.log(profilePic);
   return (
     <tr>
-      <td className="td-data">{userName}</td>
+      <td className="td-data">
+        <img src={image} className="profile-pic" />
+        {userName}
+      </td>
       <td className="td-data">
         {user.monday.startTime}
         {user.monday.startTimeAbbreviations} - {user.monday.endTime}

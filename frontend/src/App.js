@@ -13,6 +13,7 @@ import {
   addUserDetails,
   deleteUser,
 } from "./features/user/user.reducer";
+import SignUpForm from "./components/SignUpForm/SignUpForm";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function App() {
   return userDetail?.length === 0 ? (
     <Routes>
       <Route path={Path.LOGIN} element={<Login />} />
+      <Route path={Path.SIGNUP} element={<SignUpForm />} />
       <Route path="/*" element={<Navigate to={Path.LOGIN} />} />
     </Routes>
   ) : (

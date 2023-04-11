@@ -1,8 +1,9 @@
 require("dotenv").config();
-
+// const awsSecrets = require("./constants/getAwsSecrets").awsSecret;
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const { awsSecret } = require("./constants/getAwsSecrets");
 
 //Routers
 const userRouter = require("./Routes/userRouter");
@@ -13,10 +14,12 @@ const roleRouter = require("./Routes/RoleRoutes/roleManagmentRouter");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-mongoose.connect(process.env.DATABASE_URL);
-const db = mongoose.connection;
-db.on("error", (error) => console.error(error));
-db.once("open", () => console.log("Connected to Database"));
+awsSecret().then((data) => {
+  mongoose.connect(JSON.parse(data).DATABASE_URL);
+  const db = mongoose.connection;
+  db.on("error", (error) => console.error(error));
+  db.once("open", () => console.log("Connected to Database"));
+});
 
 const corsOption = {
   origin: ["http://localhost:3000"],

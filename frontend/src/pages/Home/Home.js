@@ -181,65 +181,6 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
-
-    // const editUserInfo = {
-    //   user_id: editFormValues.user_id,
-    //   startDate: "2020-05-18T14:10:30Z",
-    //   endDate: "2020-12-18T14:10:30Z",
-    //   name: editFormValues.name,
-    //   monday: {
-    //     startTime: editFormValues.monday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.monday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   tuesday: {
-    //     startTime: editFormValues.tuesday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.tuesday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   wednesday: {
-    //     startTime: editFormValues.wednesday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.wednesday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   thursday: {
-    //     startTime: editFormValues.thursday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.thursday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   friday: {
-    //     startTime: editFormValues.friday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.friday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   saturday: {
-    //     startTime: editFormValues.saturday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.saturday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   sunday: {
-    //     startTime: editFormValues.sunday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: editFormValues.saturday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    // };
-
-    // const newUserShiftInfoList = [...userShiftInfo];
-
-    // const index = userShiftInfo.findIndex(
-    //   (user) => user.user_id === editFormValues.user_id
-    // );
-
-    // newUserShiftInfoList[index] = editUserInfo;
-
-    // setUserShiftInfo(newUserShiftInfoList);
     setEditableState(null);
   };
 
@@ -257,58 +198,6 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
-
-    // const EditFormValues = {
-    //   user_id: user.user_id,
-    //   startDate: "2020-05-18T14:10:30Z",
-    //   endDate: "2020-12-18T14:10:30Z",
-    //   name: user.name,
-    //   monday: {
-    //     startTime: user.monday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.monday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   tuesday: {
-    //     startTime: user.tuesday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.tuesday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   wednesday: {
-    //     startTime: user.wednesday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.wednesday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   thursday: {
-    //     startTime: user.thursday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.thursday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   friday: {
-    //     startTime: user.friday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.friday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   saturday: {
-    //     startTime: user.saturday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.saturday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    //   sunday: {
-    //     startTime: user.sunday.startTime,
-    //     startTimeAbbreviations: "AM",
-    //     endTime: user.saturday.endTime,
-    //     endTimeAbbreviations: "PM",
-    //   },
-    // };
-
-    // setEditFormValues(EditFormValues);
-    // console.log(EditFormValues);
   };
 
   const handleCancle = () => {
@@ -324,14 +213,6 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
-
-    // const newUserInfo = [...userShiftInfo];
-    // const index = userShiftInfo.findIndex(
-    //   (user) => user.user_id === deleteUserId
-    // );
-
-    // newUserInfo.splice(index, 1);
-    // setUserShiftInfo(newUserInfo);
   };
 
   const options = allUserList
@@ -389,6 +270,9 @@ const Home = () => {
                           return null;
                         }
                       })}
+                      profilePic={allUserList
+                        .filter((img) => user.user_id === img._id)
+                        .map((img) => img.profilePicture)}
                       user={user}
                       handleEditClick={handleEditClick}
                       handleDelete={handleDelete}

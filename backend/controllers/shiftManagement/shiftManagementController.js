@@ -3,6 +3,8 @@ const {
 } = require("../../models/AllocatedShift/allocatedShiftModel");
 const Shift = require("../../models/AllocatedShift/allocatedShiftModel");
 const User = require("../../models/user/userModel");
+const axios = require("axios");
+require("dotenv").config();
 exports.addShift = async (req, res) => {
   const shift = new Shift({
     user_id: req.body.user_id,
@@ -18,6 +20,31 @@ exports.addShift = async (req, res) => {
   });
   try {
     const newShift = await shift.save();
+    const user = await User.findOne({ _id: req.body.user_id });
+    console.log("++++++++++++++++++++++++++++++++++++++");
+    console.log(user.email);
+    axios.post(process.env.API_GATEWAY_URL + "/SendMailShiftSync", {
+      to: user.email,
+      subject: `New Shift Added to Your Schedule`,
+      message: `Dear ${user.name},
+      
+      I am writing to inform you that a new shift has been added to your schedule on our Shift-Sync application. The details of your new shift are as follows:
+
+      Shift Date: ${req.body.startDate}
+      Shift Start-Time: ${req.body.monday.startTime} 
+      Shift End-Time: ${req.body.monday.endTime} 
+      Shift Role: ${user.Position}
+
+      Please ensure that you have reviewed the details of this shift and make any necessary arrangements. If you are unable to work this shift, please notify your manager or use the time off request feature on our web application as soon as possible.
+
+      If you have any questions or concerns regarding this shift or any other shift on your schedule, please do not hesitate to contact your manager or our customer support team at ShitSync@gmail.com.
+
+      Thank you for using our Shift-Sync application. We strive to make shift management easier and more efficient for you.
+
+      Best regards,
+
+      Shift-Sync`,
+    });
     res.status(201).json(newShift);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -41,7 +68,7 @@ exports.getAllShift = async (req, res) => {
 
 exports.getLatestShifts = async (req, res) => {
   try {
-    const userList = await User.find({}).select("name email");
+    const userList = await User.find({}).select("name email profilePicture");
 
     let latestShifts = await Shift.aggregate([
       {

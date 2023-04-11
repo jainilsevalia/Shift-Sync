@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const {
   getAllUser,
   // createNewUser,
@@ -12,7 +13,9 @@ const {
 } = require("../controllers/Authentication/Register.controller.js");
 const auth = require("../middleware/auth.middleware");
 
-router.route("/").post(registerUser);
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.route("/").post(upload.single("profilepicture"), registerUser);
 
 //Protected Route
 router.use(auth);
