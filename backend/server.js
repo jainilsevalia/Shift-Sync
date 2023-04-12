@@ -22,7 +22,7 @@ awsSecret().then((data) => {
 });
 
 const corsOption = {
-  origin: ["http://localhost:3000"],
+  origin: true,
   // origin: "*",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
