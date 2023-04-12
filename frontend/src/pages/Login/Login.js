@@ -78,6 +78,14 @@ const Login = () => {
                 Submit
               </button>
             </form>
+            <button
+              className="login_button"
+              onClick={() => {
+                navigate(Path.SIGNUP);
+              }}
+            >
+              Submit
+            </button>
           </div>
         </div>
       </div>

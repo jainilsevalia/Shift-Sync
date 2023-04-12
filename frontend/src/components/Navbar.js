@@ -14,14 +14,15 @@ function Navbarfun() {
   const dispatch = useDispatch();
 
   const handlelogut = () => {
-    axios.get("/auth/logout").then((response) => {
-      if (response.data.message === "Logout Successful") {
-        dispatch(deleteUser());
-        navigate(Path.LOGIN);
-      } else {
-        navigate(Path.HOME);
-      }
-    });
+    navigate(Path.LOGIN);
+    // axios.get("/auth/logout").then((response) => {
+    //   if (response.data.message === "Logout Successful") {
+    //     dispatch(deleteUser());
+    //     navigate(Path.LOGIN);
+    //   } else {
+    //     navigate(Path.HOME);
+    //   }
+    // });
   };
   return (
     <>
