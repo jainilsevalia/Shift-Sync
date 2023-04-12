@@ -12,7 +12,7 @@ const verifyCookie = (req, res, next) => {
   const token = req.cookies.token;
   console.log(token);
   try {
-    const user = jwt.verify(token, tokenKey);
+    const user = jwt.verify(token, tokenKey || "QWE789asd456ZXC123");
     // console.log(user);
     req.user = user;
     next();
