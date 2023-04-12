@@ -9,6 +9,8 @@ exports.login = async (req, res) => {
     let tokenAge;
     awsSecret().then((data) => {
       tokenKey = JSON.parse(data).TOKEN_KEY;
+      console.log("//////////////////////////////");
+      console.log(tokenKey);
       tokenAge = JSON.parse(data).TOKEN_AGE_IN_DAYS;
     });
     const { email, PIN } = req.body;
