@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const AWS = require("aws-sdk");
 const axios = require("axios");
+const { awsSecret } = require("../../constants/getAwsSecrets");
 AWS.config.update({
   region: process.env.REGION,
   accessKeyId: process.env.ACCESS_KEY_ID,
@@ -11,12 +12,17 @@ AWS.config.update({
   sessionToken: process.env.SESSION_TOKEN,
 });
 
+let bucketFromAWS;
+awsSecret().then((data) => {
+  bucketFromAWS = JSON.parse(data).S3_BUCKET_NAME;
+});
+
 const s3 = new AWS.S3();
 
 exports.registerUser = async (req, res) => {
   console.log("//////////////////////////");
   console.log(req.file);
-  var bucketName = process.env.S3_BUCKET_NAME;
+  var bucketName = bucketFromAWS;
   const fileContent = req.file.buffer;
   const image = String(Date.now() + req.file.originalname);
   const params = { Bucket: bucketName, Key: image, Body: fileContent };
