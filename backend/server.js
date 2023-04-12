@@ -21,6 +21,13 @@ awsSecret().then((data) => {
   db.once("open", () => console.log("Connected to Database"));
 });
 
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  })
+);
 // const corsOption = {
 //   origin: true,
 //   // origin: "*",
