@@ -10,7 +10,7 @@ const {
 const auth = require("../../middleware/auth.middleware");
 
 //Protected Routes after this line
-router.use(auth);
+// router.use(auth);
 
 //add shift
 router.route("/addShift").post(addShift);

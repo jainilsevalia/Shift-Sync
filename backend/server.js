@@ -11,7 +11,7 @@ const shiftManagementRouter = require("./Routes/shiftManagement/shiftManagementR
 const authRouter = require("./Routes/AuthenticationRoutes/Authentication.Router");
 const roleRouter = require("./Routes/RoleRoutes/roleManagmentRouter");
 
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 awsSecret().then((data) => {
@@ -30,20 +30,20 @@ app.use(
 );
 
 app.use(express.json());
-app.use(cookieParser());
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", true);
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
-  }
-  next();
-});
+// app.use(cookieParser());
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header("Access-Control-Allow-Credentials", true);
+//   if (req.method === "OPTIONS") {
+//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//     return res.status(200).json({});
+//   }
+//   next();
+// });
 
 app.use("/user", userRouter);
 app.use("/shift", shiftManagementRouter);
