@@ -75,7 +75,7 @@ const Login = () => {
                 name="password"
               />
               <button className="login_button" type="submit">
-                Submit
+                Login
               </button>
             </form>
             <button
@@ -84,7 +84,7 @@ const Login = () => {
                 navigate(Path.SIGNUP);
               }}
             >
-              Submit
+              SignUp
             </button>
           </div>
         </div>
