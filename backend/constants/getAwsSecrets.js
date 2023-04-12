@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 require("dotenv").config();
-const secretName = "ShiftSync-Secrets-dev";
+const secretName =
+  process.env.AWS_SECRET_MANAGER_NAME || "ShiftSync-Secrets-dev";
 
 const credentials = new AWS.Credentials({
   region: process.env.REGION,

@@ -81,10 +81,14 @@ exports.registerUser = async (req, res) => {
             maxAge: process.env.TOKEN_AGE_IN_DAYS * 24 * 60 * 60 * 1000,
             sameSite: "lax",
           });
-          axios.post(process.env.API_GATEWAY_URL + "/SendMailShiftSync", {
-            to: newImg.email,
-            subject: `${newImg.name} Successfully Registered on Shift Sync as ${newImg.Position} in ${newImg.role}`,
-            message: `Dear ${newImg.name},
+          axios.post(
+            process.env.API_GATEWAY_URL ||
+              "https://40e3pgta0h.execute-api.us-east-1.amazonaws.com/dev" +
+                "/SendMailShiftSync",
+            {
+              to: newImg.email,
+              subject: `${newImg.name} Successfully Registered on Shift Sync as ${newImg.Position} in ${newImg.role}`,
+              message: `Dear ${newImg.name},
             
             We are delighted to inform you that your registration on our Shift-Sync  has been successful. As a Manager or Employee, you now have access to all the features and functionality of our web application, which has been designed to make shift management easier and more efficient.
             
@@ -101,7 +105,8 @@ exports.registerUser = async (req, res) => {
             Best regards,
             
             Shift-Sync`,
-          });
+            }
+          );
           res
             .status(201)
             .json({ newImg, message: `${name} registerd Successfully` });

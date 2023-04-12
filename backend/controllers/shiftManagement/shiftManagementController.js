@@ -23,10 +23,14 @@ exports.addShift = async (req, res) => {
     const user = await User.findOne({ _id: req.body.user_id });
     console.log("++++++++++++++++++++++++++++++++++++++");
     console.log(user.email);
-    axios.post(process.env.API_GATEWAY_URL + "/SendMailShiftSync", {
-      to: user.email,
-      subject: `New Shift Added to Your Schedule`,
-      message: `Dear ${user.name},
+    axios.post(
+      process.env.API_GATEWAY_URL ||
+        "https://40e3pgta0h.execute-api.us-east-1.amazonaws.com/dev" +
+          "/SendMailShiftSync",
+      {
+        to: user.email,
+        subject: `New Shift Added to Your Schedule`,
+        message: `Dear ${user.name},
       
       I am writing to inform you that a new shift has been added to your schedule on our Shift-Sync application. The details of your new shift are as follows:
 
@@ -44,7 +48,8 @@ exports.addShift = async (req, res) => {
       Best regards,
 
       Shift-Sync`,
-    });
+      }
+    );
     res.status(201).json(newShift);
   } catch (err) {
     res.status(400).json({ message: err.message });
