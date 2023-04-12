@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
     } else if (user && (await bcrypt.compare(PIN, user.PIN))) {
       const token = jwt.sign(
         { user_id: user._id, email },
-        tokenKey || "QWE789asd456ZXC123",
+        "QWE789asd456ZXC123",
         {
           expiresIn: "24h",
         }
@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
       user.token = token;
       res.cookie("token", token, {
         httpOnly: true,
-        maxAge: tokenAge || 2 * 24 * 60 * 60 * 1000,
+        maxAge: 2 * 24 * 60 * 60 * 1000,
         sameSite: "lax",
       });
       res.status(200).json({ user, message: "Login successful" });
