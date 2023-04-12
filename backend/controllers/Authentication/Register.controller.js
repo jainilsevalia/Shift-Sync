@@ -13,8 +13,14 @@ AWS.config.update({
 });
 
 let bucketFromAWS;
+let tokenKey;
+let tokenAge;
+// let apiGateWayUrl;
 awsSecret().then((data) => {
   bucketFromAWS = JSON.parse(data).S3_BUCKET_NAME;
+  tokenKey = JSON.parse(data).TOKEN_KEY;
+  tokenAge = JSON.parse(data).TOKEN_AGE_IN_DAYS;
+  // apiGateWayUrl = JSON.parse(data).API_GATEWAY_URL;
 });
 
 const s3 = new AWS.S3();
@@ -70,7 +76,7 @@ exports.registerUser = async (req, res) => {
               user_id: newImg._id,
               email: newImg.email,
             },
-            process.env.TOKEN_KEY,
+            tokenKey,
             {
               expiresIn: "24h",
             }
@@ -78,7 +84,7 @@ exports.registerUser = async (req, res) => {
           newImg.token = token;
           res.cookie("token", token, {
             httpOnly: true,
-            maxAge: process.env.TOKEN_AGE_IN_DAYS * 24 * 60 * 60 * 1000,
+            maxAge: tokenAge * 24 * 60 * 60 * 1000,
             sameSite: "lax",
           });
           axios.post(
