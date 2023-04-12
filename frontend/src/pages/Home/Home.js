@@ -47,7 +47,7 @@ const Home = () => {
 
   useEffect(() => {
     axios
-      .get("/shift/getAllShift")
+      .get("/shift/getAllShift", { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setAllUserShiftInfo(response.data.latestShifts);
