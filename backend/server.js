@@ -30,20 +30,6 @@ app.use(
 );
 
 app.use(express.json());
-// app.use(cookieParser());
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", req.headers.origin);
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   res.header("Access-Control-Allow-Credentials", true);
-//   if (req.method === "OPTIONS") {
-//     res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
 
 app.use("/user", userRouter);
 app.use("/shift", shiftManagementRouter);
@@ -51,6 +37,5 @@ app.use("/auth", authRouter);
 app.get("/temp", (req, res) => {
   res.status(200).json({ message: "You Can Sleep Now!!!" });
 });
-// app.use("/role", roleRouter);
 
 app.listen(5000, () => console.log("server started"));
