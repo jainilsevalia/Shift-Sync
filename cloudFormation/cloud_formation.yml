@@ -1,0 +1,357 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Cloud Formation of Shift-Sync Cloud Architecture"
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
+
+Mappings:
+  SecretsMap:
+    dev:
+      ShiftSyncScerets: '{"DATABASE_URL": "mongodb+srv://jainilsevalia:jainilsevalia@canadiantire.sigvmif.mongodb.net/test","TOKEN_KEY": "QWE789asd456ZXC123","TOKEN_AGE_IN_DAYS" : 2, "S3_BUCKET_NAME":"shift-sync-user-profile-image", "SENDER_EMAIL":"sev.jainil@gmail.com", "SENDER_PASSWORD":"ldckssvesheppbev"}'
+    prod:
+      ShiftSyncScerets: '{"DATABASE_URL": "mongodb+srv://jainilsevalia:jainilsevalia@canadiantire.sigvmif.mongodb.net/test","TOKEN_KEY": "QWE789asd456ZXC123","TOKEN_AGE_IN_DAYS" : 1}'
+
+Resources:
+  ShiftSyncSecrets:
+    Type: "AWS::SecretsManager::Secret"
+    Properties:
+      Name: !Sub "${AWS::StackName}-Secrets-${Environment}"
+      Description: !Sub "Shift-Sync Secrets for ${Environment}"
+      SecretString: !FindInMap [SecretsMap, !Ref Environment, ShiftSyncScerets]
+
+  ShiftSyncSQSQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: !Sub "ShiftSync-Email-${Environment}"
+
+  ShiftSyncS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      # AccessControl: PublicRead
+      BucketName: "shift-sync-user-profile-image"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+        # BlockPublicAcls: false
+        # IgnorePublicAcls: false
+        # BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
+
+  ShiftSyncS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ShiftSyncS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        # Id: "RestrictBucketAccess"
+        Statement:
+          - Sid: "PublicReadGetObject"
+            Action: "s3:GetObject"
+            Effect: Allow
+            Resource: "arn:aws:s3:::shift-sync-user-profile-image/*"
+            Principal: "*"
+          # - Effect: Deny
+          #   Principal: "*"
+          #   Action: "s3:*"
+          #   Resource: !Sub "arn:aws:s3:::${ShiftSyncS3Bucket}/*"
+          # Condition:
+          #   NotIpAddress:
+          #     # TODO: add EC2 Ip below
+          #     aws:SourceIp: "192.168.1.100/32"
+
+  ShiftSyncLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code:
+        ImageUri: "619575664046.dkr.ecr.us-east-1.amazonaws.com/shift-sync:latest"
+      Description: "Shift-Sync Lambda function for Sending mail to user"
+      Role: "arn:aws:iam::619575664046:role/LabRole"
+      PackageType: Image
+      Environment:
+        Variables:
+          SHIFT_SYNC_SECRET_MANAGER_NAME: !Sub "${AWS::StackName}-Secrets-${Environment}"
+
+  TriggerLambdaOnSQSQueueChnage:
+    Type: "AWS::Lambda::EventSourceMapping"
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !GetAtt ShiftSyncSQSQueue.Arn
+      FunctionName: !Ref ShiftSyncLambdaFunction
+
+  ShiftSyncVPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "192.168.0.0/24"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-VPC
+
+  ShiftSyncPrivateSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      AvailabilityZone: us-east-1a
+      CidrBlock: "192.168.0.128/25"
+      MapPublicIpOnLaunch: false
+      VpcId: !Ref ShiftSyncVPC
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-Backend-Private-Subnet
+
+  ShiftSyncPublicSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      AvailabilityZone: us-east-1b
+      CidrBlock: "192.168.0.0/25"
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref ShiftSyncVPC
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-Frontend-Public-Subnet
+
+  ShiftSyncPrivateRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref ShiftSyncVPC
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-VPC-Private-Route-Table
+
+  ShiftSyncPublicRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref ShiftSyncVPC
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-VPC-Public-Route-Table
+
+  ShiftSyncPrivateRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref ShiftSyncPrivateRouteTable
+      SubnetId: !Ref ShiftSyncPrivateSubnet
+
+  ShiftSyncPubllicRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref ShiftSyncPublicRouteTable
+      SubnetId: !Ref ShiftSyncPublicSubnet
+
+  ShiftSyncInternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-InternetGateway
+
+  ShiftSyncInternetGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref ShiftSyncVPC
+      InternetGatewayId: !Ref ShiftSyncInternetGateway
+
+  ShiftSyncPublicRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref ShiftSyncPublicRouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref ShiftSyncInternetGateway
+
+  ShiftSyncPrivateRoute:
+    Type: "AWS::EC2::Route"
+    DependsOn: ShiftSyncNATGateway
+    Properties:
+      RouteTableId: !Ref ShiftSyncPrivateRouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref ShiftSyncNATGateway
+
+  ShiftSyncNATGateway:
+    Type: "AWS::EC2::NatGateway"
+    Properties:
+      AllocationId: !GetAtt ShiftSyncElasticIP.AllocationId
+      SubnetId: !Ref ShiftSyncPublicSubnet
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-NAT-Gateway
+
+  ShiftSyncElasticIP:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-NAT-ElasticIP
+
+  ShiftSyncPublicSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: "ShiftSyncPublicSecurityGroup"
+      GroupDescription: "Public Security Group for Shift Sync"
+      VpcId: !Ref ShiftSyncVPC
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: "-1"
+          ToPort: "-1"
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: "-1"
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-Public-Security-Group
+
+  ShiftSyncPrivateSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: "ShiftSyncPrivateSecurityGroup"
+      GroupDescription: "Private Security Group for Shift Sync"
+      VpcId: !Ref ShiftSyncVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 5000
+          ToPort: 5000
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref ShiftSyncPublicSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: Shift-Sync-Public-Security-Group
+
+  ShiftSyncAPIGateway:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Name: "ShiftSyncAPIGateway"
+
+  SendMailShiftSyncResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      RestApiId: !Ref ShiftSyncAPIGateway
+      ParentId: !GetAtt ShiftSyncAPIGateway.RootResourceId
+      PathPart: "SendMailShiftSync"
+
+  SendMailShiftSyncPOSTMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      HttpMethod: "POST"
+      ResourceId: !Ref SendMailShiftSyncResource
+      RestApiId: !Ref ShiftSyncAPIGateway
+      AuthorizationType: "NONE"
+      Integration:
+        Type: "AWS"
+        IntegrationHttpMethod: "POST"
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:sqs:path/${AWS::AccountId}/ShiftSync-Email-${Environment}"
+        Credentials: "arn:aws:iam::619575664046:role/LabRole"
+        PassthroughBehavior: NEVER
+        RequestParameters:
+          integration.request.header.Content-Type: "'application/x-www-form-urlencoded'"
+        RequestTemplates:
+          application/json: "Action=SendMessage&MessageBody=$input.body"
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Content-Type: "'application/json'"
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseModels:
+            application/json: "Empty"
+          ResponseParameters:
+            method.response.header.Content-Type: true
+
+  Deployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: SendMailShiftSyncPOSTMethod
+    Properties:
+      RestApiId: !Ref ShiftSyncAPIGateway
+      StageName: !Sub ${Environment}
+
+  ShiftSyncEC2InstancePublic:
+    Type: "AWS::EC2::Instance"
+    DependsOn: ShiftSyncEC2InstancePrivate
+    Properties:
+      ImageId: ami-007855ac798b5175e
+      InstanceType: t2.micro
+      KeyName: vockey
+      SubnetId: !Ref ShiftSyncPublicSubnet
+      SecurityGroupIds:
+        - !Ref ShiftSyncPublicSecurityGroup
+      IamInstanceProfile: LabInstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          echo "HERE WE GOOOOOOOOOO!!!!!!!!!!!!!!"
+          sudo apt-get update
+          sudo apt install curl -y
+          sudo apt policy nodejs -y
+          sudo curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+          sudo apt-get install nodejs -y
+          sudo apt install npm -y
+          sudo apt install npm -y
+          sudo git clone "https://github.com/jainilsevalia/Shift-Sync.git"
+          cd Shift-Sync
+          cd frontend
+          sudo npm update
+          sudo npm i
+          sudo npm install sass@latest --save-dev
+          echo "REACT_APP_BACKEND_URL=http://${ShiftSyncEC2InstancePrivate.PublicIp}:5000/" >> /Shift-Sync/frontend/.env
+          sudo npm run build
+          sudo apt install nginx -y
+          sudo cp -r /Shift-Sync/frontend/build/* /var/www/html/
+          sudo systemctl restart nginx
+
+  ShiftSyncEC2InstancePrivate:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-007855ac798b5175e
+      InstanceType: t2.micro
+      KeyName: vockey
+      SubnetId: !Ref ShiftSyncPublicSubnet
+      SecurityGroupIds:
+        - !Ref ShiftSyncPublicSecurityGroup
+      IamInstanceProfile: LabInstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          echo "HERE WE GOOOOOOOOOO!!!!!!!!!!!!!!"
+          sudo apt update
+          git clone "https://github.com/jainilsevalia/Shift-Sync.git"
+          sudo apt install curl -y
+          sudo apt policy nodejs -y
+          sudo curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+          sudo apt-get install nodejs -y
+          sudo apt install npm -y
+          echo "API_GATEWAY_URL=https://${ShiftSyncAPIGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/SendMailShiftSync" >> /Shift-Sync/backend/.env
+          cd /Shift-Sync/backend
+          sudo npm i
+          sudo npm i -g nodemon
+          nodemon server.js
