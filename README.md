@@ -1,7 +1,7 @@
 # Shift-Sync
 ![Architecture drawio](https://user-images.githubusercontent.com/37774202/234840502-9556ed10-9b25-46f7-9c66-2aa6b8996f60.svg)
 
-| AWS Service | Reason for Use |
+| <span style="color:blue">AWS Service</span> | <span style="color:blue">Reason for Use</span> |
 | ----------- | -------------- |
 | Amazon S3 | Used to store profile pictures of employees. |
 | AWS Secrets Manager | Used to securely store all database credentials and JWT's key and age. |
