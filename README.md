@@ -1,7 +1,7 @@
 # Shift-Sync
 ![Architecture drawio](https://user-images.githubusercontent.com/37774202/234840502-9556ed10-9b25-46f7-9c66-2aa6b8996f60.svg)
 
-| <span style="color:blue">AWS Service</span> | <span style="color:blue">Reason for Use</span> |
+|AWS Service |Reason for Use |
 | ----------- | -------------- |
 | Amazon S3 | Used to store profile pictures of employees. |
 | AWS Secrets Manager | Used to securely store all database credentials and JWT's key and age. |
@@ -15,4 +15,5 @@
 | Internet Gateway | Used to connect the public subnet's frontend instance to the internet. |
 | Route Table | Used for managing the traffic of the internet and internal communication. |
 | Amazon EC2 | Used to deploy the frontend and backend of the application. |
+| CloudFormation | Created the whole application architecture mentioned above using the CloudFormation which can be found in the CloudFormation folder in the `cloud_formation.yml` file. |
 
