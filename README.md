@@ -47,7 +47,7 @@ npm -v
 git -v
 ```
 
--   _Create AWS account and run the CloudFormation file in AWS CloudFormation service. You can find the file of Cloud Formation file here : `Shift-Sync/cloudFormation/cloud_formation.yml`  
+-   Create AWS account and run the CloudFormation file in AWS CloudFormation service. You can find the file of Cloud Formation file here : `Shift-Sync/cloudFormation/cloud_formation.yml`  
 
 ## How to run application
 
@@ -98,4 +98,3 @@ npm start
 ```
 
 Both the server are now up and running.
-v
