@@ -1,18 +1,18 @@
 # Shift-Sync
 ![Architecture drawio](https://user-images.githubusercontent.com/37774202/234840502-9556ed10-9b25-46f7-9c66-2aa6b8996f60.svg)
 
-| Services | Reason |
-|----------|--------|
-| S3       | Used S3 bucket for storing profile pictures of employees. |
-| Secrets Manager | Stored all Database credentials and JWT’s key and age. |
-| API Gateway | Used as endpoint of mail sending API. |
-| SQS | Storing all the messages in a Queue that is got in API gateway payload. |
-| Lambda | Wrote a function for sending mail and pushed it to dockerhub as an image. Lambda service is fetching the image and trigger when the message added in the SQS Queue. |
-| VPC | Created a virtual private cloud for securing the application in cloud. This results in decreasing the latency of internal communication of application. Allocated a 192.168.0.0/24 CIDER block. |
-| Public Subnet | Created public subnet in VPC to deploy frontend instance. As frontend of application should be  accessible to everyone. Allocated a 192.168.0.0/25 CIDER block. |
-| Private Subnet | Created Private subnet in VPC to deploy backend of the application. Backend should be secure, and not accessible to anyone directly as business logic is in the backend. Allocated a 192.168.0.128/25 CIDER block. |
-| NAT Gateway | Used to connect Private subnet’s backend instance to other AWS services and internet for downloading dependencies. As NAT Gateway by default blocked the inbound traffic to secure the Private subnet’s instances. |
-| Internet Gateway | Used to connect the Public subnet’s frontend instance to the internet. |
+| AWS Service | Reason for Use |
+| --- | --- |
+| Amazon S3 | Used to store profile pictures of employees. |
+| AWS Secrets Manager | Used to securely store all database credentials and JWT's key and age. |
+| Amazon API Gateway | Used as the endpoint for the mail sending API. |
+| Amazon SQS | Used to store all messages in a queue that are received in the API Gateway payload. |
+| AWS Lambda | Created a function for sending mail and pushed it to DockerHub as an image. The Lambda service fetches the image and triggers when a message is added to the SQS queue. |
+| Amazon VPC | Created a virtual private cloud to secure the application in the cloud, resulting in decreased latency of internal communication of the application. A 192.168.0.0/24 CIDR block was allocated. |
+| Public Subnet | Created a public subnet in the VPC to deploy the frontend instance. The frontend of the application should be accessible to everyone. A 192.168.0.0/25 CIDR block was allocated. |
+| Private Subnet | Created a private subnet in the VPC to deploy the backend of the application. The backend should be secure and not directly accessible to anyone as the business logic is in the backend. A 192.168.0.128/25 CIDR block was allocated. |
+| NAT Gateway | Used to connect the private subnet's backend instance to other AWS services and the internet for downloading dependencies. The NAT Gateway blocks inbound traffic by default to secure the private subnet's instances. |
+| Internet Gateway | Used to connect the public subnet's frontend instance to the internet. |
 | Route Table | Used for managing the traffic of the internet and internal communication. |
-| EC2 | Used it for deploying the frontend and backend of the application. |
+| Amazon EC2 | Used to deploy the frontend and backend of the application. |
 
